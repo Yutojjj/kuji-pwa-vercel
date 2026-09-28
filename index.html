@@ -28,6 +28,9 @@ button{border-radius:0!important}
 .fraction button{width:88%;min-height:22px}
 .frac-line{width:82%}
 .basic-fields{gap:6px}
+.dock-chance{margin-top:3px;padding:9px 11px;border:1px solid #dce4ff;border-radius:8px;background:#eef2ff}
+.dock-chance small{font-size:12px;font-weight:700;color:#43527a}
+.dock-chance strong{font-size:21px;font-weight:850;color:#3f57d9}
 </style>
 <body><main class="app"><header class="top"><div class="brand"><b>KUJI</b> / 確率ラボ</div></header><div class="section-head"><h2>くじを比較</h2><span class="count" id="count"></span></div><section id="cards" class="cards"></section><button class="add" id="add"><span>＋</span>比較するくじを追加</button><p class="foot">「当たり確率」は1回ごとの確率です。「期待当たり数」は入力した回数での平均値なので、実際の結果を保証するものではありません。</p></main>
 <aside class="result-dock" id="resultDock" aria-label="計算結果" hidden><nav class="dock-tabs" id="dockTabs" aria-label="表示するくじを選択"></nav><div class="dock-content" id="dockContent"></div></aside>
@@ -39,5 +42,8 @@ button{border-radius:0!important}
 </script>
 <script>
 (()=>{const content=document.querySelector('#dockContent');if(!content)return;content.addEventListener('pointerup',()=>setTimeout(()=>{content.style.transition='transform .18s ease';content.style.transform='translateX(0)'},140));content.addEventListener('pointercancel',()=>{content.style.transition='transform .18s ease';content.style.transform='translateX(0)'})})();
+</script>
+<script>
+(()=>{const content=document.querySelector('#dockContent');if(!content)return;new MutationObserver(()=>{const value=content.querySelector('.dock-chance strong');if(!value||!value.textContent.startsWith('100'))return;try{const items=JSON.parse(localStorage.getItem('kuji-items-v1')||'[]'),id=localStorage.getItem('kuji-selected-v1'),item=items.find(x=>x.id===id);if(!item||!item.total||item.wins>=item.total||!item.draws)return;const hit=1-Math.pow(1-item.wins/item.total,item.draws);if(hit<1)value.textContent='99.99%'}catch{}}).observe(content,{childList:true,subtree:true})})();
 </script>
 </body></html>
